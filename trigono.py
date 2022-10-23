@@ -95,6 +95,10 @@ def Newton1(k,l,a_i,b_j, c):
 
     while (i < MAXIMUM_ITERATION):
 
+        if (evaluation1_derivative(k,l,a_i,b_j, x_n) == 0):
+            print("Division by 0 encountered. The nearest value found is", x_n, "with", i,"iterations")
+            return x_n
+
         x_n1 = x_n - evaluation1(k,l,a_i,b_j,x_n, c) / evaluation1_derivative(k,l,a_i,b_j, x_n)
 
         if (abs(x_n - x_n1) <= (10 ** (-tol))):

@@ -3,6 +3,7 @@ from trigono import *
 from polyno import *
 
 from copy import *
+import numpy as np
 
 
 MAXIMUM_ITERATION = 500
@@ -19,18 +20,13 @@ def print_menu():
 
 
 
-def derivate3(system, n, vector):
+def derivate3(system, n):
     #Creation of a Matrix n*n ready to accept part derivative of equations
-    evaluation = []
     JMatrix = []
-
     for x in range(n):
         JMatrix.append([])
-        evaluation.append([])
         for y in range(n):
             JMatrix[x].append([])
-            evaluation[x].append([])
-
 
     for i in range(n):
         for x in range(n):
@@ -44,21 +40,70 @@ def derivate3(system, n, vector):
 
                 JMatrix[i][x][j]= copy(derivative)
 
-
-                for a in range(len(vector)):
-                   evaluation[i][x] = 1
-                   evaluation[i][x] *= copy(vector[a]**derivative[a+1])
-
                 j+=1
 
     print(JMatrix)
-    print(evaluation)
 
     f = open("result.txt", "w")
     f.write(str(JMatrix))
-    f.write("\n Evaluation : \n")
-    f.write(str(evaluation))
     f.close()
+    return JMatrix
+
+def evaluation_derivative3(JMatrix, n, vector):
+    evaluation = []
+    for x in range(n):
+        evaluation.append([])
+        for y in range(n):
+            evaluation[x].append([])
+
+
+    for i in range(n):
+        for x in range(n):
+            j=0
+            evaluation[i][x] = 0
+            for k in range(len(JMatrix[i][x])):
+                derivative = copy(JMatrix[i][x][j])
+
+                evaluation_term = derivative[0]
+                for a in range(len(vector)):
+                   evaluation_term *= copy(vector[a]**derivative[a+1])
+
+                evaluation[i][x] += copy(evaluation_term)
+
+                j+=1
+
+    return evaluation
+
+def evaluation3(system, vector, n):
+    evaluation = []
+    for x in range(n):
+        evaluation.append(0)
+
+    for i in range(n):
+        for j in range(len(system[i])):
+            term = copy(system[i][j])
+
+            evaluation_term = term[0]
+
+            for a in range(len(vector)):
+                evaluation_term *= copy(vector[a]**term[a+1])
+
+            evaluation[i] += copy(evaluation_term)
+
+    return evaluation
+
+
+
+def Newton3(JMatrix, n, vector, system):
+
+
+    print(np.linalg.det(system))
+
+    F1 = evaluation3(system, vector, n)
+    F2 = evaluation_derivative3(JMatrix, n, vector)
+
+    
+
 
 ######################
 #########CODE#########
@@ -86,19 +131,27 @@ elif(choice == 2):
         i-=1
 
     print("The value of the derivative in", x2, "is equal to", evaluation2(n2,a_i2, x2))
-
-
     print("The root found with the Newton's method is",Newton2(a_i2, n2))
 
 
 
 elif(choice == 3):
     print("Now importing the file variable.py ...")
-    derivate3(system3, n3, vector3)
+
+    JMatrix3 = derivate3(system3, n3)
+    Evaluation3 = evaluation_derivative3(JMatrix3, n3, vector3)
+    print(Evaluation3)
+
+    Newton3(JMatrix3, n3, vector3, system3)
 
 elif(choice == 4):
     print("Now importing the file variable.py ...")
-    derivate3(system3, n3, vector3)
+
+    JMatrix3 = derivate3(system3, n3)
+    Evaluation3 = evaluation_derivative3(JMatrix3, n3, vector3)
+    print(Evaluation3)
+
+    #Newton3(JMatrix3, n3, vector3, system3)
 
 else:
     print("ERROR: Please enter a value between 1 and 4\n")

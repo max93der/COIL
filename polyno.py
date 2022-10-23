@@ -40,10 +40,14 @@ def Newton2(a_i, n):
     print("What degree of precision is desired ? 10^- ")
     tol = int(input())
     i=0
-    x_n=1
+    x_n=-1
     Da_i, Dn = derivate2(n, a_i)
 
     while(i<MAXIMUM_ITERATION):
+
+        if (evaluation2(Dn,Da_i,x_n) == 0):
+            print("Division by 0 encountered. The nearest value found is", x_n, "with", i,"iterations")
+            return x_n
 
         x_n1 = x_n - evaluation2(n,a_i, x_n)/evaluation2(Dn,Da_i,x_n)
 

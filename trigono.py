@@ -1,7 +1,6 @@
 import math
 MAXIMUM_ITERATION = 500
 
-
 def get_arg1():
     print("The function you should enter is formated like this :")
     print("Sum_{i=1}^{k} (a_i)*cos(ix) + Sum_{j=1}^{l} (b_j)*sin(jx) + C\n")
